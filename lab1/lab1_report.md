@@ -7,7 +7,9 @@
 **CI/CD** — метод, позволяющий выпускать новые версии продукта, не управляя процессом вручную. Это помогает избежать человеческих ошибок, оптимизировать и ускорить процесс деплоя.
 
 Пример "плохого" CI/CD:
-`stages:
+
+```
+stages:
   - build
   - test
   - deploy
@@ -33,7 +35,8 @@ deploy_job:
     - echo "Deploying to production..."
     - scp ./build/* user@production-server:/var/www/html
   only:
-    - master`
+    - master
+```
 
     Разберем ошибки:
 
@@ -55,7 +58,7 @@ deploy_job:
 
   Исправим вышеописанные ошибки и получим пример "хорошего" CI/CD:
 
-  `# Good CI/CD file
+```
 stages:
   - build
   - test
@@ -103,4 +106,5 @@ deploy_production_job:
   when: manual
   environment:
     name: production
-    url: https://production-server`
+    url: https://production-server
+```
