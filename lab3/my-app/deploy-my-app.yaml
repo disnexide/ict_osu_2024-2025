@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-app
+  name: my-app
+  namespace: default
+  uid: 47a2cd8e-27bd-4b41-95c3-e43d890b21f3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - image: my-app
+        imagePullPolicy: Never
+        name: my-app
+        ports:
+          - containerPort: 8080
+
+status: {}
