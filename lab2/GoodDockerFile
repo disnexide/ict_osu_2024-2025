@@ -1,0 +1,36 @@
+# Используем стабильную версию базового образа (выбираем версию, которая имеет минимальный вес образа) 
+FROM python:3.9-slim
+
+# Обновляем список пакетов
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3 python3-pip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем curl
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем git и vim
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git vim && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Создаем нового пользователя
+RUN useradd -m appuser
+
+# Копируем только необходимые файлы
+COPY requirements.txt /app/
+COPY app.py /app/
+
+# Установка рабочей директории
+WORKDIR /app
+
+# Устанавливаем зависимости с указанием версий
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Указываем нового пользователя
+USER appuser
+
+# Определяем команду, которая будет выполняться при запуске контейнера, запускаем приложение
+CMD ["python3", "app.py"]
