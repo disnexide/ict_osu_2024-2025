@@ -1,0 +1,55 @@
+name: Node.js CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # или другая ветка, которую хотите отслеживать
+  pull_request:
+    branches:
+      - main  # для PR на ветку main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # используется Ubuntu для выполнения пайплайна
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # скачиваем код репозитория
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2  # установка Node.js
+        with:
+          node-version: '14'  # указываем версию Node.js
+
+      - name: Install dependencies
+        run: npm install  # установка зависимостей
+
+      - name: Build the project
+        run: npm run build  # сборка проекта
+
+  test:
+    runs-on: ubuntu-latest  # снова Ubuntu
+    needs: build  # тесты выполняются после сборки
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Run tests
+        run: npm test  # выполнение тестов
+
+  deploy:
+    runs-on: ubuntu-latest  # деплой на Ubuntu
+    needs: test  # деплой выполняется после успешного прохождения тестов
+    if: success()  # выполняется только при успешных тестах
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production server..."
+          scp -r ./build/* user@production-server:/var/www/html  # деплой на сервер
