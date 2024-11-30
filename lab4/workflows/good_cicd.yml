@@ -1,0 +1,44 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  BUILD_DIR: build
+
+build_job:
+  stage: build
+  script:
+    - echo "Installing dependencies..."
+    - npm ci
+    - echo "Building the project..."
+    - npm run build
+  cache:
+    key: npm-cache
+    paths:
+      - node_modules/
+  artifacts:
+    paths:
+      - $BUILD_DIR/
+    expire_in: 1 week
+  only:
+    - main
+    - dev
+
+test_job:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - npm test
+  dependencies:
+    - build_job
+
+deploy_job:
+  stage: deploy
+  script:
+    - echo "Deploying to production..."
+    - scp $BUILD_DIR/* user@$DEPLOY_SERVER:/var/www/html
+  dependencies:
+    - build_job
+  only:
+    - main
