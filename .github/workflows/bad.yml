@@ -1,31 +1,62 @@
-name: bad CI/CD Workflow
+name: Bad CI/CD Workflow
 
 on: [push, pull_request]
 
-stages:
-  - build
-  - test
-  - deploy
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-build_job:
-  stage: build
-  script:
-    - npm install
-    - echo "Building the project..."
-    - npm run build
-  only:
-    - master
+    steps:
+      # Получение кода из репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-test_job:
-  stage: test
-  script:
-    - npm test
-    - echo "Running tests..."
+      # Установка Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-deploy_job:
-  stage: deploy
-  script:
-    - echo "Deploying to production..."
-    - scp ./build/* user@production-server:/var/www/html
-  only:
-    - master
+      # Установка зависимостей из requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Сборка приложения (плохая практика - заглушка вместо реальной сборки)
+      - name: Build the project
+        run: echo "Building the project..."
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Получение кода из репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Установка Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Установка зависимостей из requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Тесты (плохая практика - только заглушка)
+      - name: Run tests
+        run: echo "Running tests..." && exit 0
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Получение кода из репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Деплой (плохая практика - фиктивный сервер)
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production..."
+          scp -r ./build/* user@fake-production-server:/var/www/html
