@@ -1,0 +1,36 @@
+name: "Good CI/CD Workflow"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up environment variables
+        run: echo "CONFIG_PATH=./config" >> $GITHUB_ENV
+
+      - name: Run the script
+        run: |
+          echo "Running the script"
+          bash script.sh
+        continue-on-error: false
+
+      - name: Clean up
+        run: |
+          echo "Cleaning up temporary files"
+          rm -rf temp/*
+
+      - name: Notify success
+        if: success()
+        run: echo "Deployment complete!"
+        
+      - name: Notify failure
+        if: failure()
+        run: echo "Something went wrong!"
