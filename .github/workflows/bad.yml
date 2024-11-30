@@ -1,0 +1,31 @@
+name: Bad CI/CD Workflow
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Run without checkout
+        run: echo "Running without checking out code!"
+      
+      - name: Install dependencies
+        run: |
+          curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+        env:
+          NODE_ENV: development
+
+      - name: Hardcoded secrets
+        run: echo "API_KEY=123456789abcdef" > .env
+
+      - name: No error handling
+        run: |
+          echo "Deploying app..."
+          ./deploy.sh
+
+      - name: Overprivileged actions
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: true
