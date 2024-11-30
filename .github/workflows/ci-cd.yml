@@ -1,55 +1,45 @@
-name: Node.js CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main  # или другая ветка, которую хотите отслеживать
+      - master
   pull_request:
     branches:
-      - main  # для PR на ветку main
+      - master
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # используется Ubuntu для выполнения пайплайна
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2  # скачиваем код репозитория
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2  # установка Node.js
-        with:
-          node-version: '14'  # указываем версию Node.js
-
-      - name: Install dependencies
-        run: npm install  # установка зависимостей
-
-      - name: Build the project
-        run: npm run build  # сборка проекта
-
-  test:
-    runs-on: ubuntu-latest  # снова Ubuntu
-    needs: build  # тесты выполняются после сборки
-    steps:
+      # Шаг для получения кода из репозитория
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Шаг для установки Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '14'
 
+      # Шаг для установки зависимостей, указываем директорию с package.json
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./lab4/source  # Путь к директории с package.json
+
+      # Шаг для сборки проекта, указываем директорию с package.json
+      - name: Build the project
+        run: npm run build
+        working-directory: ./lab4/source  # Путь к директории с package.json
+
+      # Шаг для тестирования проекта
       - name: Run tests
-        run: npm test  # выполнение тестов
+        run: npm test
+        working-directory: ./lab4/source  # Путь к директории с package.json
 
-  deploy:
-    runs-on: ubuntu-latest  # деплой на Ubuntu
-    needs: test  # деплой выполняется после успешного прохождения тестов
-    if: success()  # выполняется только при успешных тестах
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      # Шаг для деплоя (если требуется)
+      - name: Deploy
+        run: echo "Deploying to production..."
+        working-directory: ./lab4/source  # Путь к директории с package.json
 
-      - name: Deploy to production
-        run: |
-          echo "Deploying to production server..."
-          scp -r ./build/* user@production-server:/var/www/html  # деплой на сервер
