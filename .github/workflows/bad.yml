@@ -19,7 +19,7 @@ jobs:
 
       # Установка зависимостей из requirements.txt
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r lab4/requirements.txt
 
       # Сборка приложения (плохая практика - заглушка вместо реальной сборки)
       - name: Build the project
@@ -41,7 +41,7 @@ jobs:
 
       # Установка зависимостей из requirements.txt
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r lab4/requirements.txt
 
       # Тесты (плохая практика - только заглушка)
       - name: Run tests
