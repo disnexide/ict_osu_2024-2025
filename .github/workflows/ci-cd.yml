@@ -23,23 +23,18 @@ jobs:
         with:
           node-version: '14'
 
-      # Шаг для установки зависимостей, указываем директорию с package.json
+      # Шаг для установки зависимостей, теперь не нужно указывать рабочую директорию, так как package.json в корне
       - name: Install dependencies
         run: npm install
-        working-directory: ./lab4/source  # Путь к директории с package.json
 
-      # Шаг для сборки проекта, указываем директорию с package.json
+      # Шаг для сборки проекта
       - name: Build the project
         run: npm run build
-        working-directory: ./lab4/source  # Путь к директории с package.json
 
       # Шаг для тестирования проекта
       - name: Run tests
         run: npm test
-        working-directory: ./lab4/source  # Путь к директории с package.json
 
       # Шаг для деплоя (если требуется)
       - name: Deploy
         run: echo "Deploying to production..."
-        working-directory: ./lab4/source  # Путь к директории с package.json
-
