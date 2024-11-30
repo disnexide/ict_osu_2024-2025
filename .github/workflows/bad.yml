@@ -1,0 +1,22 @@
+name: "Bad CI/CD Workflow"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run script
+        run: |
+          echo "Starting script"
+          bash script.sh
+
+      - name: Clean up
+        run: rm -rf temp/*
