@@ -1,0 +1,33 @@
+name: Good CI/CD Workflow
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Use secrets securely
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: echo "Using secrets from GitHub Secrets"
+
+      - name: Deploy with error handling
+        run: |
+          set -e
+          echo "Deploying app..."
+          ./deploy.sh || { echo "Deployment failed!"; exit 1; }
+
+      - name: Checkout code with limited credentials
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
