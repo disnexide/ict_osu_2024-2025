@@ -65,54 +65,42 @@ SCP потенциально не обеспечивает должной без
 ### Исправим вышеописанные ошибки и получим пример "хорошего" CI/CD:
 
 ```
-stages:
-  - build
-  - test
-  - deploy_staging
-  - deploy_production
+name: "Good CI/CD Workflow"
 
-cache:
-  paths:
-    - node_modules/
+on:
+  push:
+    branches:
+      - main
 
-build_job:
-  stage: build
-  script:
-    - npm ci
-    - echo "Building the project..."
-    - npm run build
-  only:
-    - merge_requests
-    - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-test_job:
-  stage: test
-  script:
-    - npm test
-  allow_failure: false
-  only:
-    - merge_requests
-    - master
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-deploy_staging_job:
-  stage: deploy_staging
-  script:
-    - echo "Deploying to staging..."
-    - rsync -avz ./build/ user@staging-server:/var/www/staging
-  only:
-    - merge_requests
+      - name: Set up environment variables
+        run: echo "CONFIG_PATH=./config" >> $GITHUB_ENV
 
-deploy_production_job:
-  stage: deploy_production
-  script:
-    - echo "Deploying to production..."
-    - rsync -avz ./build/ user@production-server:/var/www/html
-  only:
-    - master
-  when: manual
-  environment:
-    name: production
-    url: https://production-server
+      - name: Run the script
+        run: |
+          echo "Running the script"
+          bash script.sh
+        continue-on-error: false
+
+      - name: Clean up
+        run: |
+          echo "Cleaning up temporary files"
+          rm -rf temp/*
+
+      - name: Notify success
+        if: success()
+        run: echo "Deployment complete!"
+        
+      - name: Notify failure
+        if: failure()
+        run: echo "Something went wrong!"
 ```
 
 **Что исправлено:**
