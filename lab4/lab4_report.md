@@ -9,33 +9,28 @@
 ### Пример "плохого" CI/CD:
 
 ```
-stages:
-  - build
-  - test
-  - deploy
+name: "Bad CI/CD Workflow"
 
-build_job:
-  stage: build
-  script:
-    - npm install
-    - echo "Building the project..."
-    - npm run build
-  only:
-    - master
+on:
+  push:
+    branches:
+      - main
 
-test_job:
-  stage: test
-  script:
-    - npm test
-    - echo "Running tests..."
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-deploy_job:
-  stage: deploy
-  script:
-    - echo "Deploying to production..."
-    - scp ./build/* user@production-server:/var/www/html
-  only:
-    - master
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run script
+        run: |
+          echo "Starting script"
+          bash script.sh
+
+      - name: Clean up
+        run: rm -rf temp/*
 ```
 
 ### Разберем ошибки:
