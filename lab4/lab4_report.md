@@ -115,6 +115,14 @@ jobs:
 
 ![image](https://github.com/user-attachments/assets/32d5fb64-ba1b-4237-8a32-08711f1110e7)
 
+"Плохой" CI/CD:
+
+![image](https://github.com/user-attachments/assets/1f94c2bb-0d5f-4c0e-9cac-a404eb58ca71)
+
+"Хороший" CI/CD:
+
+![image](https://github.com/user-attachments/assets/d7db2f5a-0761-410e-aeb4-81591c36bbb2)
+
 
 ## Вывод
 После исправления ошибок "плохого" CI/CD деплой станет стабильнее, безопаснее и быстрее. В "хорошем" учтены все недочеты, и такой формат позволяет улучшить качество развертываемого кода и его надежность.
